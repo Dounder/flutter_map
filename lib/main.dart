@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_placeholder/config/config.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 Future<void> main() async {
   try {
@@ -9,6 +10,9 @@ Future<void> main() async {
     await dotenv.load();
 
     setupDependencies();
+
+    MapboxOptions.setAccessToken(Envs.mapBoxApi);
+
     runApp(const MyApp());
   } catch (e) {
     // ignore: avoid_print
