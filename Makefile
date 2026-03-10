@@ -1,8 +1,8 @@
-.PHONY: help clean clean-cache pod-deintegrate pod-install update-flutter setup build-apk build-ios run test lint format watch-freezed watch-all watch
+.PHONY: help clean clean-cache pod-deintegrate pod-install update-flutter setup check-lefthook build-apk build-ios run test lint format watch-freezed watch-all watch
 
 help:
 	@echo "Available commands:"
-	@echo "  make setup          - Clean and install everything"
+	@echo "  make setup          - Clean and install everything (includes lefthook)"
 	@echo "  make clean          - Clean build artifacts"
 	@echo "  make clean-cache    - Clean Pub cache"
 	@echo "  make pod-install    - Install iOS pods"
@@ -40,10 +40,22 @@ pod-install:
 update-flutter:
 	flutter upgrade
 
-# Setup project: clean, get dependencies, update and install pods
+# Setup project: clean, get dependencies, update and install pods, install git hooks
 setup: clean
 	flutter pub get
 	cd ios && pod repo update && pod install
+	lefthook install
+	@echo "Lefthook git hooks installed."
+
+# Verify lefthook hooks are installed; fail with instructions if not
+check-lefthook:
+	@if [ ! -f .git/hooks/pre-commit ] || [ ! -f .git/hooks/commit-msg ]; then \
+		echo ""; \
+		echo "ERROR: Lefthook git hooks are not installed."; \
+		echo "Run 'lefthook install' or 'make setup' to install them."; \
+		echo ""; \
+		exit 1; \
+	fi
 
 # Build APK for Android (use FLAVOR for --flavor, defaults to dev, e.g., staging or prod)
 FLAVOR ?= dev
@@ -59,11 +71,11 @@ run:
 	flutter run --flavor $(FLAVOR)
 
 # Run tests
-test:
+test: check-lefthook
 	flutter test
 
 # Run linting
-lint:
+lint: check-lefthook
 	flutter analyze
 
 # Format code
