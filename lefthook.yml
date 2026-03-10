@@ -1,0 +1,36 @@
+# Lefthook configuration
+# Docs: https://lefthook.dev/configuration/
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: dart format check
+      glob: "*.dart"
+      run: dart format --set-exit-if-changed {staged_files}
+
+    - name: flutter analyze
+      run: flutter analyze --no-fatal-infos
+
+commit-msg:
+  jobs:
+    - name: conventional commits
+      run: |
+        MSG=$(cat {1})
+        # Conventional Commits pattern: type(scope)?: description
+        # Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+        if ! echo "$MSG" | grep -qE "^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?(!)?: .{1,}$"; then
+          echo "ERROR: Commit message does not follow Conventional Commits format."
+          echo ""
+          echo "Expected format: <type>(<scope>)?: <description>"
+          echo ""
+          echo "Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+          echo ""
+          echo "Examples:"
+          echo "  feat: add login screen"
+          echo "  fix(auth): handle token expiration"
+          echo "  chore(deps): upgrade flutter_bloc to 9.1.1"
+          echo "  feat!: breaking change in router API"
+          echo ""
+          echo "Your message: $MSG"
+          exit 1
+        fi
