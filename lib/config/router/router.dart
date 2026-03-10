@@ -11,4 +11,9 @@ List<RouteBase> _buildRoutes() => [
     name: HomeScreen.name,
     builder: (context, state) => const HomeScreen(),
   ),
+  GoRoute(
+    path: '/map',
+    name: MapScreen.name,
+    builder: (context, state) => const MapScreen(),
+  ),
 ];
