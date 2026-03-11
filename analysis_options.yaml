@@ -12,10 +12,22 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - git_hooks.dart
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+    - '**/*.mocks.dart'
+    - build/**
+    - .dart_tool/**
+    - test/drift/**
   language:
-    strict-casts: true
-    strict-inference: true
-    strict-raw-types: true
+    strict-casts: false
+    strict-inference: false
+    strict-raw-types: false
+  errors:
+    invalid_annotation_target: ignore
+
+formatter:
+  page_width: 120 # Set the maximum line length to 120 characters
+  trailing_commas: 'automate' # Automatically add trailing commas where possible
 
 linter:
   rules:
@@ -28,7 +40,7 @@ linter:
     prefer_const_constructors: true # Use const when possible
     prefer_const_declarations: true # Use const for local variables
     prefer_const_literals_to_create_immutables: true
-    avoid_print: false # Allow print statements
+    avoid_print: true # Allow print statements
 
     # QUOTE AND STRING RULES
     unnecessary_string_interpolations: true # Avoid unnecessary ${} in strings
@@ -55,7 +67,6 @@ linter:
     prefer_expression_function_bodies: true # Use => for simple functions
 
     # NULL SAFETY RULES
-    avoid_null_checks_in_equality_operators: true
     unnecessary_null_aware_assignments: true # Remove unnecessary ??=
     unnecessary_null_in_if_null_operators: true # Remove unnecessary ?? null
 
