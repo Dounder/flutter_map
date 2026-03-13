@@ -34,7 +34,7 @@ class _View extends StatelessWidget {
       body: Stack(
         children: [
           const CustomMap(showCrosshair: true),
-          Positioned(bottom: 0, right: 10, child: SafeArea(child: _buildMapActions(context))),
+          Positioned(bottom: 10, right: 10, child: SafeArea(child: _buildMapActions(context))),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
@@ -45,19 +45,33 @@ class _View extends StatelessWidget {
     ),
   );
 
-  Column _buildMapActions(BuildContext context) => Column(
-    children: [
-      CustomIconButton(
-        onPressed: context.read<MapCubit>().removeLastPoint,
-        icon: Icons.remove,
-        tooltip: 'Remove last point',
-      ),
-      CustomIconButton(onPressed: context.read<MapCubit>().addPoint, icon: Icons.add, tooltip: 'Add point'),
-      CustomIconButton(
-        onPressed: context.read<MapCubit>().centerCamera,
-        icon: Icons.center_focus_strong,
-        tooltip: 'Center camera',
-      ),
-    ],
+  Widget _buildMapActions(BuildContext context) => BlocBuilder<MapCubit, MapState>(
+    builder: (context, state) {
+      final mapReady = state.mapReady;
+
+      return Column(
+        spacing: 10,
+        children: [
+          FloatingActionButton(
+            heroTag: 'center_camera',
+            onPressed: mapReady ? context.read<MapCubit>().centerCamera : null,
+            tooltip: 'Center camera',
+            child: const Icon(Icons.center_focus_strong),
+          ),
+          FloatingActionButton(
+            heroTag: 'add_point',
+            onPressed: mapReady ? context.read<MapCubit>().addPoint : null,
+            tooltip: 'Add point',
+            child: const Icon(Icons.add),
+          ),
+          FloatingActionButton(
+            heroTag: 'remove_point',
+            onPressed: mapReady ? context.read<MapCubit>().removeLastPoint : null,
+            tooltip: 'Remove last point',
+            child: const Icon(Icons.remove),
+          ),
+        ],
+      );
+    },
   );
 }

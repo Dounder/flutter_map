@@ -46,6 +46,7 @@
   "git.confirmSync": false,
   "git.autofetch": true,
   "cSpell.words": [
+    "Dasharray",
     "maptest"
   ]
 }

@@ -34,25 +34,29 @@ class MapCubit extends Cubit<MapState> {
   }
 
   Future<void> addPoint([MapPoint? point]) async {
+    if (!state.mapReady) return;
     _logger.d('Adding point');
     final newPoint = point ?? await _getCameraCenterPoint();
     final newPoints = state.points.addWithOrder(newPoint);
-    await _graphicService.addPoint(newPoint);
+    await _graphicService.updateGraphics(newPoints);
     emit(state.copyWith(points: newPoints));
   }
 
   Future<void> removeLastPoint() async {
+    if (!state.mapReady) return;
+
     if (state.points.isEmpty) {
       _emitError('No points to remove', warning: true);
       return;
     }
 
-    final lastPoint = state.points.last;
-    await _graphicService.removePoint(lastPoint);
-    emit(state.copyWith(points: state.points.excludeLast()));
+    final newPoints = state.points.excludeLast();
+    await _graphicService.updateGraphics(newPoints);
+    emit(state.copyWith(points: newPoints));
   }
 
   void switchMode(MapMode mode) {
+    if (!state.mapReady) return;
     if (state.mode == mode) return;
     _graphicService.clearAll();
     emit(MapState(mode: mode));

@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:map_test/config/config.dart';
@@ -14,11 +15,10 @@ class CustomMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    // final map = context.watch<MapCubit>();
     final gps = context.watch<GpsCubit>();
-    final isLoading = gps.state.loading /* || map.state.loading */;
+    final isLoading = gps.state.loading;
 
-    if (isLoading) return const Center(child: CircularProgressIndicator());
+    if (isLoading) return const MapLoader();
 
     if (!gps.state.gpsEnabled) return _buildMessage(colors: colors, text: 'GPS is disabled', icon: Icons.gps_off);
 
@@ -42,7 +42,7 @@ class CustomMap extends StatelessWidget {
 
   Widget _buildMap(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
-      final mapCubit = context.read<MapCubit>();
+      final mapCubit = context.watch<MapCubit>();
       return SizedBox(
         width: constraints.maxWidth,
         height: constraints.maxHeight,
@@ -54,7 +54,8 @@ class CustomMap extends StatelessWidget {
               cameraOptions: mapCubit.state.cameraOptions,
             ),
 
-            if (showCrosshair) const MapCrosshair(),
+            if (showCrosshair && mapCubit.state.mapReady) const MapCrosshair(),
+            _buildPlaceholder(mapCubit.state.mapReady),
           ],
         ),
       );
@@ -78,6 +79,15 @@ class CustomMap extends StatelessWidget {
           if (cta != null) ElevatedButton(onPressed: cta, child: const Text('Enable')),
         ],
       ),
+    ),
+  );
+
+  Widget _buildPlaceholder(bool mapReady) => IgnorePointer(
+    child: FadeOut(
+      animate: mapReady,
+      delay: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 800),
+      child: const MapLoader(),
     ),
   );
 }

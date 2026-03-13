@@ -8,6 +8,5 @@ abstract class MapGraphicService {
   void clear(MapGraphicType type);
   void clearAll();
 
-  Future<void> addPoint(MapPoint point);
-  Future<void> removePoint(MapPoint point);
+  Future<void> updateGraphics(List<MapPoint> points);
 }
