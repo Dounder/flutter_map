@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_placeholder/data/data.dart';
 import 'package:go_router/go_router.dart';
+import 'package:map_test/data/data.dart';
 
 class HomeScreen extends StatelessWidget {
   static const name = 'home_screen';

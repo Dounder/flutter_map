@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_placeholder/domain/domain.dart';
+import 'package:map_test/domain/domain.dart';
 
 class PermissionData {
   static PermissionConfig getPermissionConfig(PermissionType type) => switch (type) {

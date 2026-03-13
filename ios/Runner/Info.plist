@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Flutter placeholder</string>
+	<string>DR Map Test</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>flutter_placeholder</string>
+	<string>DR Map Test</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -69,6 +69,8 @@
 
 	<!-- Location permissions -->
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to show it on the map.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>We need your location to show it on the map.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>We need your location to show it on the map.</string>

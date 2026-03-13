@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_placeholder/config/config.dart';
-import 'package:flutter_placeholder/domain/domain.dart';
-import 'package:flutter_placeholder/infrastructure/infrastructure.dart';
-import 'package:flutter_placeholder/presentation/presentation.dart';
+import 'package:map_test/config/config.dart';
+import 'package:map_test/domain/domain.dart';
+import 'package:map_test/infrastructure/infrastructure.dart';
+import 'package:map_test/presentation/presentation.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 class CustomMap extends StatelessWidget {
-  const CustomMap({super.key});
+  final bool showCrosshair;
+
+  const CustomMap({super.key, this.showCrosshair = false});
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +37,28 @@ class CustomMap extends StatelessWidget {
       );
     }
 
-    return _buildMap();
+    return _buildMap(context);
   }
 
-  Widget _buildMap() => MapWidget(
-    styleUri: MapboxStyles.SATELLITE_STREETS,
-    cameraOptions: CameraOptions(center: Point(coordinates: Position(-90.5588447, 14.6101772)), zoom: 15),
+  Widget _buildMap(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final mapCubit = context.read<MapCubit>();
+      return SizedBox(
+        width: constraints.maxWidth,
+        height: constraints.maxHeight,
+        child: Stack(
+          children: [
+            MapWidget(
+              onMapCreated: mapCubit.onMapCreated,
+              styleUri: MapboxStyles.SATELLITE_STREETS,
+              cameraOptions: mapCubit.state.cameraOptions,
+            ),
+
+            if (showCrosshair) const MapCrosshair(),
+          ],
+        ),
+      );
+    },
   );
 
   Widget _buildMessage({

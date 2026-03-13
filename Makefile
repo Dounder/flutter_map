@@ -1,4 +1,4 @@
-.PHONY: help clean clean-cache pod-deintegrate pod-install update-flutter setup check-lefthook build-apk build-ios run test lint format watch-freezed watch-all watch
+.PHONY: help clean clean-cache pod-deintegrate pod-install update-flutter setup check-lefthook build-apk build-ios run test lint format watch-freezed watch-all watch build_runner
 
 help:
 	@echo "Available commands:"
@@ -17,6 +17,7 @@ help:
 	@echo "  make watch-freezed  - Run build_runner with only freezed (fast)"
 	@echo "  make watch-all      - Run build_runner with all builders"
 	@echo "  make watch          - Run build_runner with default config"
+	@echo "  make build_runner   - Run build_runner with default config"
 
 # Clean Flutter build artifacts and caches
 clean:
@@ -93,3 +94,6 @@ watch-all:
 # Run build_runner with default config
 watch:
 	dart run build_runner watch --delete-conflicting-outputs
+
+build_runner:
+	dart run build_runner build --delete-conflicting-outputs

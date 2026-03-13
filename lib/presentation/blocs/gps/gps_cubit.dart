@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter_placeholder/domain/domain.dart';
-import 'package:flutter_placeholder/infrastructure/infrastructure.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:logger/logger.dart';
+import 'package:map_test/domain/domain.dart';
+import 'package:map_test/infrastructure/infrastructure.dart';
 
 part 'gps_cubit.freezed.dart';
 part 'gps_state.dart';
@@ -22,6 +22,23 @@ class GpsCubit extends Cubit<GpsState> {
       super(const GpsState()) {
     logger.d('GpsCubit initialized');
     _init();
+  }
+
+  void setHasGpsPermission(bool hasPermission) {
+    _logger.d('GPS permission status updated: ${hasPermission ? 'granted' : 'denied'}');
+    emit(state.copyWith(hasGpsPermission: hasPermission));
+  }
+
+  Future<MapPoint> getCurrentLocation() async {
+    if (!state.gpsEnabled || !state.hasGpsPermission) {
+      _logger.w('GPS is not enabled or permission is not granted');
+      return MapPoint.create();
+    }
+
+    final position = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 10)),
+    );
+    return MapPoint.fromPosition(position);
   }
 
   Future<void> _init() async {
@@ -41,11 +58,6 @@ class GpsCubit extends Cubit<GpsState> {
     });
 
     return isEnable;
-  }
-
-  void setHasGpsPermission(bool hasPermission) {
-    _logger.d('GPS permission status updated: ${hasPermission ? 'granted' : 'denied'}');
-    emit(state.copyWith(hasGpsPermission: hasPermission));
   }
 
   @override

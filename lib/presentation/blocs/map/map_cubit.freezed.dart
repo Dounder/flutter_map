@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MapState {
 
- bool get mapReady;
+ bool get mapReady; MapMode get mode; List<MapPoint> get points; double get zoom; CameraOptions? get cameraOptions; String? get errorMessage; String? get warnMessage;
 /// Create a copy of MapState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MapStateCopyWith<MapState> get copyWith => _$MapStateCopyWithImpl<MapState>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapState&&(identical(other.mapReady, mapReady) || other.mapReady == mapReady));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapState&&(identical(other.mapReady, mapReady) || other.mapReady == mapReady)&&(identical(other.mode, mode) || other.mode == mode)&&const DeepCollectionEquality().equals(other.points, points)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.cameraOptions, cameraOptions) || other.cameraOptions == cameraOptions)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.warnMessage, warnMessage) || other.warnMessage == warnMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,mapReady);
+int get hashCode => Object.hash(runtimeType,mapReady,mode,const DeepCollectionEquality().hash(points),zoom,cameraOptions,errorMessage,warnMessage);
 
 @override
 String toString() {
-  return 'MapState(mapReady: $mapReady)';
+  return 'MapState(mapReady: $mapReady, mode: $mode, points: $points, zoom: $zoom, cameraOptions: $cameraOptions, errorMessage: $errorMessage, warnMessage: $warnMessage)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MapStateCopyWith<$Res>  {
   factory $MapStateCopyWith(MapState value, $Res Function(MapState) _then) = _$MapStateCopyWithImpl;
 @useResult
 $Res call({
- bool mapReady
+ bool mapReady, MapMode mode, List<MapPoint> points, double zoom, CameraOptions? cameraOptions, String? errorMessage, String? warnMessage
 });
 
 
@@ -62,10 +62,16 @@ class _$MapStateCopyWithImpl<$Res>
 
 /// Create a copy of MapState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? mapReady = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? mapReady = null,Object? mode = null,Object? points = null,Object? zoom = null,Object? cameraOptions = freezed,Object? errorMessage = freezed,Object? warnMessage = freezed,}) {
   return _then(_self.copyWith(
 mapReady: null == mapReady ? _self.mapReady : mapReady // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
+as MapMode,points: null == points ? _self.points : points // ignore: cast_nullable_to_non_nullable
+as List<MapPoint>,zoom: null == zoom ? _self.zoom : zoom // ignore: cast_nullable_to_non_nullable
+as double,cameraOptions: freezed == cameraOptions ? _self.cameraOptions : cameraOptions // ignore: cast_nullable_to_non_nullable
+as CameraOptions?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,warnMessage: freezed == warnMessage ? _self.warnMessage : warnMessage // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -150,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool mapReady)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool mapReady,  MapMode mode,  List<MapPoint> points,  double zoom,  CameraOptions? cameraOptions,  String? errorMessage,  String? warnMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MapState() when $default != null:
-return $default(_that.mapReady);case _:
+return $default(_that.mapReady,_that.mode,_that.points,_that.zoom,_that.cameraOptions,_that.errorMessage,_that.warnMessage);case _:
   return orElse();
 
 }
@@ -171,10 +177,10 @@ return $default(_that.mapReady);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool mapReady)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool mapReady,  MapMode mode,  List<MapPoint> points,  double zoom,  CameraOptions? cameraOptions,  String? errorMessage,  String? warnMessage)  $default,) {final _that = this;
 switch (_that) {
 case _MapState():
-return $default(_that.mapReady);case _:
+return $default(_that.mapReady,_that.mode,_that.points,_that.zoom,_that.cameraOptions,_that.errorMessage,_that.warnMessage);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -191,10 +197,10 @@ return $default(_that.mapReady);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool mapReady)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool mapReady,  MapMode mode,  List<MapPoint> points,  double zoom,  CameraOptions? cameraOptions,  String? errorMessage,  String? warnMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _MapState() when $default != null:
-return $default(_that.mapReady);case _:
+return $default(_that.mapReady,_that.mode,_that.points,_that.zoom,_that.cameraOptions,_that.errorMessage,_that.warnMessage);case _:
   return null;
 
 }
@@ -205,11 +211,23 @@ return $default(_that.mapReady);case _:
 /// @nodoc
 
 
-class _MapState implements MapState {
-  const _MapState({this.mapReady = false});
+class _MapState extends MapState {
+  const _MapState({this.mapReady = false, this.mode = MapMode.boundary, final  List<MapPoint> points = const [], this.zoom = 15.0, this.cameraOptions = null, this.errorMessage = null, this.warnMessage = null}): _points = points,super._();
   
 
 @override@JsonKey() final  bool mapReady;
+@override@JsonKey() final  MapMode mode;
+ final  List<MapPoint> _points;
+@override@JsonKey() List<MapPoint> get points {
+  if (_points is EqualUnmodifiableListView) return _points;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_points);
+}
+
+@override@JsonKey() final  double zoom;
+@override@JsonKey() final  CameraOptions? cameraOptions;
+@override@JsonKey() final  String? errorMessage;
+@override@JsonKey() final  String? warnMessage;
 
 /// Create a copy of MapState
 /// with the given fields replaced by the non-null parameter values.
@@ -221,16 +239,16 @@ _$MapStateCopyWith<_MapState> get copyWith => __$MapStateCopyWithImpl<_MapState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapState&&(identical(other.mapReady, mapReady) || other.mapReady == mapReady));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapState&&(identical(other.mapReady, mapReady) || other.mapReady == mapReady)&&(identical(other.mode, mode) || other.mode == mode)&&const DeepCollectionEquality().equals(other._points, _points)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.cameraOptions, cameraOptions) || other.cameraOptions == cameraOptions)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.warnMessage, warnMessage) || other.warnMessage == warnMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,mapReady);
+int get hashCode => Object.hash(runtimeType,mapReady,mode,const DeepCollectionEquality().hash(_points),zoom,cameraOptions,errorMessage,warnMessage);
 
 @override
 String toString() {
-  return 'MapState(mapReady: $mapReady)';
+  return 'MapState(mapReady: $mapReady, mode: $mode, points: $points, zoom: $zoom, cameraOptions: $cameraOptions, errorMessage: $errorMessage, warnMessage: $warnMessage)';
 }
 
 
@@ -241,7 +259,7 @@ abstract mixin class _$MapStateCopyWith<$Res> implements $MapStateCopyWith<$Res>
   factory _$MapStateCopyWith(_MapState value, $Res Function(_MapState) _then) = __$MapStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool mapReady
+ bool mapReady, MapMode mode, List<MapPoint> points, double zoom, CameraOptions? cameraOptions, String? errorMessage, String? warnMessage
 });
 
 
@@ -258,10 +276,16 @@ class __$MapStateCopyWithImpl<$Res>
 
 /// Create a copy of MapState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? mapReady = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? mapReady = null,Object? mode = null,Object? points = null,Object? zoom = null,Object? cameraOptions = freezed,Object? errorMessage = freezed,Object? warnMessage = freezed,}) {
   return _then(_MapState(
 mapReady: null == mapReady ? _self.mapReady : mapReady // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
+as MapMode,points: null == points ? _self._points : points // ignore: cast_nullable_to_non_nullable
+as List<MapPoint>,zoom: null == zoom ? _self.zoom : zoom // ignore: cast_nullable_to_non_nullable
+as double,cameraOptions: freezed == cameraOptions ? _self.cameraOptions : cameraOptions // ignore: cast_nullable_to_non_nullable
+as CameraOptions?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,warnMessage: freezed == warnMessage ? _self.warnMessage : warnMessage // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

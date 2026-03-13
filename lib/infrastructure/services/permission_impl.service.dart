@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_placeholder/data/data.dart';
-import 'package:flutter_placeholder/domain/domain.dart';
-import 'package:flutter_placeholder/infrastructure/infrastructure.dart';
-import 'package:flutter_placeholder/presentation/presentation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
+import 'package:map_test/data/data.dart';
+import 'package:map_test/domain/domain.dart';
+import 'package:map_test/infrastructure/infrastructure.dart';
+import 'package:map_test/presentation/presentation.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionServiceImpl implements PermissionService {
@@ -53,7 +53,7 @@ class PermissionServiceImpl implements PermissionService {
 
     if (status.isPermanentlyDenied) {
       _logger.d('Permission permanently denied: ${config.type}');
-      _showSettingsDialog(context, config);
+      await _showSettingsDialog(context, config);
       return false;
     }
 

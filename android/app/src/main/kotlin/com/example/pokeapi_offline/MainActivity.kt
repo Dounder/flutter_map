@@ -1,4 +1,4 @@
-package com.example.flutter_placeholder
+package wtf.glasdou.maptest
 
 import io.flutter.embedding.android.FlutterActivity
 

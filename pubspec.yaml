@@ -1,5 +1,5 @@
-name: flutter_placeholder
-description: 'A flutter placeholder project.'
+name: map_test
+description: 'A flutter map test project.'
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -44,6 +44,8 @@ dependencies:
   mapbox_maps_flutter: ^2.19.1
   permission_handler: ^12.0.1
   shared_preferences: ^2.5.4
+  stream_transform: ^2.1.1
+  uuid: ^4.5.3
 
 dev_dependencies:
   build_runner: ^2.11.1
