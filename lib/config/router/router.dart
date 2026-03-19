@@ -8,4 +8,5 @@ List<RouteBase> _buildRoutes() => [
   // Core routes
   GoRoute(path: '/', name: HomeScreen.name, builder: (context, state) => const HomeScreen()),
   GoRoute(path: '/map', name: MapScreen.name, builder: (context, state) => const MapScreen()),
+  GoRoute(path: '/trace', name: TraceScreen.name, builder: (context, state) => const TraceScreen()),
 ];

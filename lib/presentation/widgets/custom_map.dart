@@ -9,8 +9,17 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 class CustomMap extends StatelessWidget {
   final bool showCrosshair;
+  final EdgeInsets padding;
+  final bool startTracking;
+  final bool dottedLine;
 
-  const CustomMap({super.key, this.showCrosshair = false});
+  const CustomMap({
+    super.key,
+    this.showCrosshair = false,
+    this.padding = EdgeInsets.zero,
+    this.startTracking = false,
+    this.dottedLine = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +52,24 @@ class CustomMap extends StatelessWidget {
   Widget _buildMap(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
       final mapCubit = context.watch<MapCubit>();
+      // If padding was provided update the camera options
+      final cameraOptions = mapCubit.state.cameraOptions.copyWith(padding: padding);
+
       return SizedBox(
         width: constraints.maxWidth,
         height: constraints.maxHeight,
         child: Stack(
           children: [
-            MapWidget(
-              onMapCreated: mapCubit.onMapCreated,
-              styleUri: MapboxStyles.SATELLITE_STREETS,
-              cameraOptions: mapCubit.state.cameraOptions,
+            Listener(
+              onPointerMove: (event) => mapCubit.setFollowing(false),
+              child: MapWidget(
+                onMapCreated: (map) async {
+                  await mapCubit.onMapCreated(map, dottedLine: dottedLine);
+                  if (startTracking) mapCubit.startTracking();
+                },
+                styleUri: MapboxStyles.SATELLITE_STREETS,
+                cameraOptions: cameraOptions.mapbox,
+              ),
             ),
 
             if (showCrosshair && mapCubit.state.mapReady) const MapCrosshair(),

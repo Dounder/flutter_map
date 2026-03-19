@@ -38,8 +38,12 @@ class GpsCubit extends Cubit<GpsState> {
     final position = await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 10)),
     );
+
     return MapPoint.fromPosition(position);
   }
+
+  Stream<Position> listenLocationChanges() =>
+      Geolocator.getPositionStream(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
 
   Future<void> _init() async {
     final gpsEnabled = await _gpsStatus();

@@ -7,11 +7,11 @@ abstract class MapState with _$MapState {
   const MapState._();
 
   const factory MapState({
+    @Default(CustomCameraOptions()) CustomCameraOptions cameraOptions,
     @Default(false) bool mapReady,
     @Default(MapMode.boundary) MapMode mode,
     @Default([]) List<MapPoint> points,
-    @Default(15.0) double zoom,
-    @Default(null) CameraOptions? cameraOptions,
+    @Default(false) bool isFollowing,
 
     @Default(null) String? errorMessage,
     @Default(null) String? warnMessage,

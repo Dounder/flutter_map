@@ -86,6 +86,39 @@ class MapGraphicServiceImpl implements MapGraphicService {
     }
   }
 
+  @override
+  Future<void> updateTrace(List<MapPoint> points) async {
+    if (points.isEmpty) {
+      _logger.d('Points are empty, clearing all graphics');
+      clearAll();
+      return;
+    }
+
+    await _addPoint(points.last);
+    await _addPolyline(points);
+
+    // switch (points.length) {
+    //   case 1:
+    //     await _addPoint(points.first);
+    //     clear(MapGraphicType.polyline);
+    //     clear(MapGraphicType.polygon);
+    //     break;
+    //   case 2:
+    //     // Remove the first point graphic because it not necessary
+    //     await _removePoint(points.first);
+    //     await _addPolyline(points);
+    //     clear(MapGraphicType.polygon);
+    //     break;
+    //   case >= 3:
+    //     // Reuse polyline as polygon border (closed loop)
+    //     await _addPolygon(points);
+    //     await _addPolyline([...points, points.first]);
+    //     break;
+    //   default:
+    //     throw Exception('Invalid number of points');
+    // }
+  }
+
   Future<void> _addPoint(MapPoint point) async {
     if (point.type != MapPointType.trace) {
       final simplePoint = await _circleManager.create(point.toPointAnnotationOptions(size: 6));
@@ -119,13 +152,11 @@ class MapGraphicServiceImpl implements MapGraphicService {
     final linePoints = points.map((e) => e.toMapboxPoint()).toList();
 
     if (_polyline != null) {
-      _logger.d('Updating polyline');
       _polyline!.geometry = LineString.fromPoints(points: linePoints);
       await _polylineManager.update(_polyline!);
       return;
     }
 
-    _logger.d('Creating polyline');
     _polyline = await _polylineManager.create(
       PolylineAnnotationOptions(
         geometry: LineString.fromPoints(points: linePoints),
@@ -139,13 +170,11 @@ class MapGraphicServiceImpl implements MapGraphicService {
     final polygonPoints = points.map((e) => e.toMapboxPoint()).toList();
 
     if (_polygon != null) {
-      _logger.d('Updating polygon');
       _polygon!.geometry = Polygon.fromPoints(points: [polygonPoints]);
       await _polygonManager.update(_polygon!);
       return;
     }
 
-    _logger.d('Creating polygon');
     _polygon = await _polygonManager.create(
       PolygonAnnotationOptions(
         geometry: Polygon.fromPoints(points: [polygonPoints]),
