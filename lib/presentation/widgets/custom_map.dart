@@ -103,8 +103,8 @@ class CustomMap extends StatelessWidget {
   Widget _buildPlaceholder(bool mapReady) => IgnorePointer(
     child: FadeOut(
       animate: mapReady,
-      delay: const Duration(seconds: 1),
-      duration: const Duration(milliseconds: 800),
+      delay: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 500),
       child: const MapLoader(),
     ),
   );

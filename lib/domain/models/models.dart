@@ -1,5 +1,6 @@
 export 'custom_camera_options.dart';
 export 'home_route.dart';
+export 'map_info.dart';
 export 'map_point.dart';
 export 'map_polygon.dart';
 export 'map_polyline.dart';

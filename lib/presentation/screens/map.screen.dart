@@ -34,7 +34,19 @@ class _View extends StatelessWidget {
       body: Stack(
         children: [
           const CustomMap(showCrosshair: true),
-          Positioned(bottom: 10, right: 10, child: SafeArea(child: _buildMapActions(context))),
+          Positioned(
+            bottom: 0,
+            right: 20,
+            left: 20,
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                spacing: 16,
+                children: [_buildMapActions(context), _buildMapMeasures(context)],
+              ),
+            ),
+          ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
@@ -49,8 +61,9 @@ class _View extends StatelessWidget {
     builder: (context, state) {
       final mapReady = state.mapReady;
 
-      return Column(
+      return Row(
         spacing: 10,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
             heroTag: 'center_camera',
@@ -74,4 +87,18 @@ class _View extends StatelessWidget {
       );
     },
   );
+
+  Widget _buildMapMeasures(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, 5))],
+      ),
+      child: BlocBuilder<MapCubit, MapState>(builder: (context, state) => MapMeasures(info: state.info)),
+    );
+  }
 }

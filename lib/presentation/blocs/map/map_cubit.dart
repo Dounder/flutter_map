@@ -17,15 +17,21 @@ class MapCubit extends Cubit<MapState> {
   final Logger _logger;
   final GpsCubit _gpsCubit;
   final MapGraphicService _graphicService;
+  final MapDistanceService _distanceService;
 
   late final mb.MapboxMap _map;
   StreamSubscription<geo.Position>? _locationSub;
 
-  MapCubit({required Logger logger, required GpsCubit gpsCubit, required MapGraphicService graphicService})
-    : _logger = logger,
-      _gpsCubit = gpsCubit,
-      _graphicService = graphicService,
-      super(const MapState());
+  MapCubit({
+    required Logger logger,
+    required GpsCubit gpsCubit,
+    required MapGraphicService graphicService,
+    required MapDistanceService distanceService,
+  }) : _logger = logger,
+       _gpsCubit = gpsCubit,
+       _graphicService = graphicService,
+       _distanceService = distanceService,
+       super(const MapState());
 
   Future<void> onMapCreated(mb.MapboxMap map, {bool dottedLine = false}) async {
     _map = map;
@@ -42,7 +48,8 @@ class MapCubit extends Cubit<MapState> {
     final newPoint = point ?? await _getCameraCenterPoint();
     final newPoints = state.points.addWithOrder(newPoint);
     await _graphicService.updateGraphics(newPoints);
-    emit(state.copyWith(points: newPoints));
+    final info = _distanceService.calculateInfo(newPoints);
+    emit(state.copyWith(points: newPoints, info: info));
   }
 
   Future<void> removeLastPoint() async {
@@ -55,7 +62,8 @@ class MapCubit extends Cubit<MapState> {
 
     final newPoints = state.points.excludeLast();
     await _graphicService.updateGraphics(newPoints);
-    emit(state.copyWith(points: newPoints));
+    final info = _distanceService.calculateInfo(newPoints);
+    emit(state.copyWith(points: newPoints, info: info));
   }
 
   void startTracking() {
@@ -65,7 +73,8 @@ class MapCubit extends Cubit<MapState> {
       final mapPoint = MapPoint.fromPosition(position).copyWith(type: MapPointType.trace);
       final cameraOptions = state.cameraOptions.copyWith(center: mapPoint);
       final newPoints = state.points.addWithOrder(mapPoint);
-      emit(state.copyWith(cameraOptions: cameraOptions, points: newPoints));
+      final info = _distanceService.calculateInfo(newPoints);
+      emit(state.copyWith(cameraOptions: cameraOptions, points: newPoints, info: info));
       await _graphicService.updateTrace(newPoints);
       if (state.isFollowing) await centerCamera();
     });

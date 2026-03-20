@@ -18,6 +18,7 @@ void setupDependencies() {
       logger: locator<Logger>(),
       gpsCubit: locator<GpsCubit>(),
       graphicService: locator<MapGraphicService>(),
+      distanceService: locator<MapDistanceService>(),
     ),
   );
 }

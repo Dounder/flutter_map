@@ -40,73 +40,39 @@ class _View extends StatelessWidget {
     child: Scaffold(
       body: Stack(
         children: [
-          const CustomMap(
-            padding: EdgeInsets.only(bottom: 2000), // padding to handle the card logic from MapBox
-            startTracking: true,
-            dottedLine: true,
-          ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            right: 20,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [_buildFollowingFab(context), const SizedBox(height: 16), _buildBottomCard(context)],
-            ),
-          ),
+          const CustomMap(padding: EdgeInsets.only(bottom: 2000), startTracking: true, dottedLine: true),
+          Positioned(bottom: 10, right: 10, child: SafeArea(child: _buildMapActions(context))),
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.pop(),
+        child: const Icon(Icons.arrow_back_ios_outlined),
       ),
     ),
   );
 
-  Widget _buildFollowingFab(BuildContext context) => BlocBuilder<MapCubit, MapState>(
-    buildWhen: (previous, current) => previous.isFollowing != current.isFollowing,
-    builder: (context, state) {
-      final colors = Theme.of(context).colorScheme;
-      return FloatingActionButton(
-        heroTag: 'trace_fab',
-        onPressed: () => context.read<MapCubit>().toggleFollowing(),
-        backgroundColor: state.isFollowing ? colors.primary : colors.surface,
-        foregroundColor: state.isFollowing ? colors.onPrimary : colors.primary,
-        child: Icon(state.isFollowing ? Icons.directions_run : Icons.directions_walk),
-      );
-    },
+  Widget _buildMapActions(BuildContext context) => BlocBuilder<MapCubit, MapState>(
+    builder: (context, state) => Column(
+      spacing: 10,
+      children: [
+        BlocBuilder<MapCubit, MapState>(
+          buildWhen: (previous, current) => previous.isFollowing != current.isFollowing,
+          builder: (context, state) {
+            final colors = Theme.of(context).colorScheme;
+            return FloatingActionButton(
+              heroTag: 'trace_fab',
+              onPressed: () {
+                context.read<MapCubit>().toggleFollowing();
+                if (!state.isFollowing) context.read<MapCubit>().centerCamera();
+              },
+              backgroundColor: state.isFollowing ? colors.primary : colors.surface,
+              foregroundColor: state.isFollowing ? colors.onPrimary : colors.primary,
+              child: Icon(state.isFollowing ? Icons.directions_run : Icons.directions_walk),
+            );
+          },
+        ),
+      ],
+    ),
   );
-
-  Widget _buildBottomCard(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, 5))],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const MapMeasures(area: 0.5, perimeter: 100),
-          const SizedBox(height: 24),
-          Row(
-            spacing: 16,
-            children: [
-              Expanded(
-                child: CustomOutlinedButton(
-                  onPressed: () => context.pop(),
-                  text: 'Cancelar',
-                  variant: ButtonVariant.danger,
-                ),
-              ),
-              Expanded(
-                child: CustomButton(onPressed: () {}, text: 'Continuar'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }

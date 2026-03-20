@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:map_test/config/config.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mb;
+import 'package:maps_toolkit/maps_toolkit.dart';
 
 part 'map_point.freezed.dart';
 
@@ -49,6 +50,8 @@ abstract class MapPoint with _$MapPoint {
         circleColor: color.withValues(alpha: opacity).toARGB32(),
         circleRadius: size,
       );
+
+  LatLng toLatLng() => LatLng(lat, lng);
 
   @override
   String toString() =>

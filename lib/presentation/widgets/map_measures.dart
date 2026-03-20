@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:map_test/domain/models/models.dart';
 
 class MapMeasures extends StatelessWidget {
-  final double? area;
-  final double? perimeter;
+  final MapInfo info;
 
-  const MapMeasures({super.key, this.area, this.perimeter});
+  const MapMeasures({super.key, required this.info});
 
   @override
   Widget build(BuildContext context) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     spacing: 16,
     children: [
-      if (area != null)
-        Expanded(
-          child: _buildMetricCard(context, icon: Icons.filter_center_focus, label: 'Área:', value: '0.5 ha'),
+      Expanded(
+        child: _buildMetricCard(context, icon: Icons.filter_center_focus, label: 'Área:', value: info.areaLegible),
+      ),
+      Expanded(
+        child: _buildMetricCard(
+          context,
+          icon: Icons.settings_overscan,
+          label: 'Perímetro:',
+          value: info.perimeterLegible,
         ),
-      if (perimeter != null)
-        Expanded(
-          child: _buildMetricCard(context, icon: Icons.settings_overscan, label: 'Perímetro:', value: '100 m'),
-        ),
+      ),
     ],
   );
 
