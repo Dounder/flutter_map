@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:logger/logger.dart';
+import 'package:map_test/config/config.dart';
 import 'package:map_test/domain/domain.dart';
 import 'package:map_test/infrastructure/infrastructure.dart';
 import 'package:map_test/presentation/presentation.dart';
@@ -33,13 +34,16 @@ class MapCubit extends Cubit<MapState> {
        _distanceService = distanceService,
        super(const MapState());
 
-  Future<void> onMapCreated(mb.MapboxMap map, {bool dottedLine = false}) async {
+  Future<void> onMapCreated(mb.MapboxMap map, {bool dottedLine = false, bool showUserLocation = false}) async {
     _map = map;
     final userPosition = await _gpsCubit.getCurrentLocation();
     final cameraOptions = state.cameraOptions.copyWith(center: userPosition);
+
     await _graphicService.setupAnnotationManager(map, dottedLine: dottedLine);
     await _map.setCamera(cameraOptions.mapbox);
+
     emit(state.copyWith(cameraOptions: cameraOptions, mapReady: true));
+    if (showUserLocation) _configLocationPuck(_map);
   }
 
   Future<void> addPoint([MapPoint? point]) async {
@@ -87,7 +91,9 @@ class MapCubit extends Cubit<MapState> {
 
   Future<void> centerCamera() async {
     if (!state.mapReady) return;
-    await _map.flyTo(state.cameraOptions.mapbox, null);
+    final userLocation = await _gpsCubit.getCurrentLocation();
+    final cameraOptions = state.cameraOptions.copyWith(center: userLocation, zoom: Constants.kDefaultZoom + 2);
+    await _map.flyTo(cameraOptions.mapbox, null);
   }
 
   void clearMessages() => emit(state.copyWith(errorMessage: null, warnMessage: null));
@@ -97,6 +103,12 @@ class MapCubit extends Cubit<MapState> {
   void toggleFollowing({bool? value}) {
     final newValue = value ?? !state.isFollowing;
     emit(state.copyWith(isFollowing: newValue));
+  }
+
+  void _configLocationPuck(mb.MapboxMap map) {
+    map.location.updateSettings(
+      mb.LocationComponentSettings(enabled: true, pulsingEnabled: true, showAccuracyRing: true),
+    );
   }
 
   Future<MapPoint> _getCameraCenterPoint() async {

@@ -24,10 +24,10 @@ abstract class MapPoint with _$MapPoint {
     @Default(MapPointType.boundary) MapPointType type,
   }) = _MapPoint;
 
-  factory MapPoint.create() => MapPoint(id: uuid.v4());
+  factory MapPoint.create() => MapPoint(id: Constants.uuid.v4());
 
   factory MapPoint.fromPosition(geo.Position position) => MapPoint(
-    id: uuid.v4(),
+    id: Constants.uuid.v4(),
     lat: position.latitude,
     lng: position.longitude,
     height: position.altitude,
@@ -35,7 +35,7 @@ abstract class MapPoint with _$MapPoint {
   );
 
   factory MapPoint.fromMapboxPoint(mb.Point point) => MapPoint(
-    id: uuid.v4(),
+    id: Constants.uuid.v4(),
     lat: point.coordinates.lat.toDouble(),
     lng: point.coordinates.lng.toDouble(),
     height: point.coordinates.alt?.toDouble() ?? 0,

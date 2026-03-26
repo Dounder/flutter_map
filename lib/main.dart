@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:map_test/config/config.dart';
+import 'package:map_test/presentation/presentation.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 Future<void> main() async {
@@ -13,7 +15,12 @@ Future<void> main() async {
 
     MapboxOptions.setAccessToken(Envs.mapBoxApi);
 
-    runApp(const MyApp());
+    runApp(
+      MultiBlocProvider(
+        providers: [BlocProvider(create: (context) => locator<DownloadManagerCubit>())],
+        child: const MyApp(),
+      ),
+    );
   } catch (e) {
     // ignore: avoid_print
     print('Error during app initialization: $e');

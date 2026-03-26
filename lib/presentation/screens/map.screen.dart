@@ -33,7 +33,7 @@ class _View extends StatelessWidget {
     child: Scaffold(
       body: Stack(
         children: [
-          const CustomMap(showCrosshair: true),
+          const CustomMap(showCrosshair: true, showUserLocation: true),
           Positioned(
             bottom: 0,
             right: 20,
@@ -60,6 +60,7 @@ class _View extends StatelessWidget {
   Widget _buildMapActions(BuildContext context) => BlocBuilder<MapCubit, MapState>(
     builder: (context, state) {
       final mapReady = state.mapReady;
+      final isDownloading = context.select((DownloadManagerCubit cubit) => cubit.state.isDownloading);
 
       return Row(
         spacing: 10,
@@ -83,6 +84,24 @@ class _View extends StatelessWidget {
             tooltip: 'Remove last point',
             child: const Icon(Icons.remove),
           ),
+          FloatingActionButton(
+            heroTag: 'download_map',
+            onPressed: mapReady && !isDownloading
+                ? () => context.read<DownloadManagerCubit>().startDownload(
+                    regionName: DateTime.now().toIso8601String(),
+                    context: context,
+                    points: state.points.toList(),
+                  )
+                : null,
+            tooltip: 'Download map',
+            child: BlocBuilder<DownloadManagerCubit, DownloadManagerState>(
+              builder: (context, state) {
+                if (!state.isDownloading) return const Icon(Icons.download);
+                final totalProgress = (state.stylePackProgress + state.tileRegionProgress) / 2;
+                return CircularProgressIndicator(value: totalProgress, strokeWidth: 4);
+              },
+            ),
+          ),
         ],
       );
     },
@@ -93,6 +112,7 @@ class _View extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(24),
+      margin: const EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
         color: colors.surface,
         borderRadius: BorderRadius.circular(24),
