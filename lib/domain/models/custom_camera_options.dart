@@ -11,8 +11,8 @@ abstract class CustomCameraOptions with _$CustomCameraOptions {
   const CustomCameraOptions._();
 
   const factory CustomCameraOptions({
-    @Default(fallbackPosition) MapPoint center,
-    @Default(16) double zoom,
+    @Default(Constants.fallbackPosition) MapPoint center,
+    @Default(Constants.kDefaultZoom) double zoom,
     @Default(0) double bearing,
     @Default(0) double pitch,
     @Default(EdgeInsets.zero) EdgeInsets padding,

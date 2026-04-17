@@ -219,7 +219,7 @@ return $default(_that.center,_that.zoom,_that.bearing,_that.pitch,_that.padding)
 
 
 class _CustomCameraOptions extends CustomCameraOptions {
-  const _CustomCameraOptions({this.center = fallbackPosition, this.zoom = 16, this.bearing = 0, this.pitch = 0, this.padding = EdgeInsets.zero}): super._();
+  const _CustomCameraOptions({this.center = Constants.fallbackPosition, this.zoom = Constants.kDefaultZoom, this.bearing = 0, this.pitch = 0, this.padding = EdgeInsets.zero}): super._();
   
 
 @override@JsonKey() final  MapPoint center;

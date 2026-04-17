@@ -12,6 +12,7 @@ class CustomMap extends StatelessWidget {
   final EdgeInsets padding;
   final bool startTracking;
   final bool dottedLine;
+  final bool showUserLocation;
 
   const CustomMap({
     super.key,
@@ -19,6 +20,7 @@ class CustomMap extends StatelessWidget {
     this.padding = EdgeInsets.zero,
     this.startTracking = false,
     this.dottedLine = false,
+    this.showUserLocation = false,
   });
 
   @override
@@ -64,7 +66,7 @@ class CustomMap extends StatelessWidget {
               onPointerMove: (event) => mapCubit.setFollowing(false),
               child: MapWidget(
                 onMapCreated: (map) async {
-                  await mapCubit.onMapCreated(map, dottedLine: dottedLine);
+                  await mapCubit.onMapCreated(map, dottedLine: dottedLine, showUserLocation: showUserLocation);
                   if (startTracking) mapCubit.startTracking();
                 },
                 styleUri: MapboxStyles.SATELLITE_STREETS,

@@ -10,4 +10,10 @@ final List<HomeRoute> homeRoutes = [
     subtitle: 'Go to TraceScreen',
     routeName: TraceScreen.name,
   ),
+  const HomeRoute(
+    title: 'Draggable Sheet',
+    icon: Icons.vertical_align_top_rounded,
+    subtitle: 'Map with bottom sheet',
+    routeName: DraggableSheetMapScreen.name,
+  ),
 ];

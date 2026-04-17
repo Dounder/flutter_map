@@ -21,4 +21,7 @@ void setupDependencies() {
       distanceService: locator<MapDistanceService>(),
     ),
   );
+  locator.registerLazySingleton<DownloadManagerCubit>(
+    () => DownloadManagerCubit(logger: locator<Logger>(), mapDownloadService: locator<MapDownloadService>()),
+  );
 }

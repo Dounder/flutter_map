@@ -12,4 +12,5 @@ void _setupServices() {
   locator.registerLazySingleton<PermissionService>(() => PermissionServiceImpl(logger: locator<Logger>()));
   locator.registerFactory<MapGraphicService>(() => MapGraphicServiceImpl(logger: locator<Logger>()));
   locator.registerFactory<MapDistanceService>(() => MapDistanceServiceImpl(logger: locator<Logger>()));
+  locator.registerFactory<MapDownloadService>(() => MapDownloadServiceImpl(logger: locator<Logger>()));
 }
